@@ -11,18 +11,24 @@
     <script id="vertexShader" type="x-shader/x-vertex">
         attribute highp vec3 aVertexPosition;
         attribute highp vec2 aTextureCoord;
-
+        
+        uniform highp mat4 uWorldMatrix;
         uniform highp mat4 uMVMatrix;
         uniform highp mat4 uProjMatrix;
 
-
+        uniform sampler2D uDiffuseSampler;
 
         varying highp vec4 m_position;
         varying highp vec2 vTextureCoord;
+        
+        varying highp vec4 m_worldpos;       
 
         void main(void) 
-        {
-            m_position = uProjMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        {          
+            
+            m_worldpos = uWorldMatrix * vec4(aVertexPosition, 1.0);
+
+            m_position = uProjMatrix * uMVMatrix * uWorldMatrix * vec4(aVertexPosition, 1.0);
 
             vTextureCoord = aTextureCoord;
 
@@ -34,21 +40,25 @@
     <script id="fragmentShader" type="x-shader/x-fragment">      
         uniform sampler2D uDiffuseSampler;
         uniform sampler2D uNormalSampler;
+        uniform highp vec3 uLightDir;
 
         varying highp vec4 m_position;
-        varying highp vec2 vTextureCoord;
+        varying highp vec2 vTextureCoord; 
+        
+        varying highp vec4 m_worldpos;      
 
         void main(void) 
         {
             highp float f_depth = 1.0 - ( m_position.z / m_position.w);
-            f_depth *= 3.0;
+            f_depth *= 3.0;            
 
             highp vec4 diffuseColor = texture2D(uDiffuseSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-            highp vec4 normalColor = texture2D(uNormalSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+            highp vec3 normalColor = vec3(texture2D(uNormalSampler, vec2(vTextureCoord.s, vTextureCoord.t)));
 
-            /*normalColor.x += 0.01 * diffuseColor.x;
-            normalColor.y += 0.01 * diffuseColor.y;
-            normalColor.z += 0.1 * diffuseColor.z;*/
+            
+            normalColor = (normalColor - 0.5) * 2.0;
+
+            //highp vec3 normalW = vec3(normalColor.x / 255.0,normalColor.y / 255.0, normalColor.z / 255.0);
             
 
             gl_FragColor = vec4(f_depth * (diffuseColor.x + normalColor.x),f_depth * (diffuseColor.y + normalColor.y),f_depth * (diffuseColor.z + normalColor.z), 1.0);
@@ -72,16 +82,16 @@
       <p> This is temporary test! This is the toolbar position</p>  
     </div>
   
-  <script src="Underscore.js" ></script>
-  <script src="Backbone.js" ></script>
-  <script src="glMatrix-9-5-0-min.js" type="text/javascript" ></script>
-  <script src="Ajax.js" type="text/javascript" ></script>
-  <script src="Model.js" type="text/javascript" ></script>
-  <script src="Scene.js" type="text/javascript" ></script>
-  <script src="Camera.js" type="text/javascript" ></script>
-  <script src="Minortools.js" type="text/javascript" ></script>  
-  <script src="Shader.js" type="text/javascript" ></script>
-  <script src="NormalShader.js" type="text/javascript" ></script>
-  <script src="Program.js" type="text/javascript" ></script> 
+  <script src="js/Underscore.js" ></script>
+  <script src="js/Backbone.js" ></script>
+  <script src="js/glMatrix-9-5-0-min.js" type="text/javascript" ></script>
+  <script src="js/Ajax.js" type="text/javascript" ></script>
+  <script src="js/Model.js" type="text/javascript" ></script>
+  <script src="js/Scene.js" type="text/javascript" ></script>
+  <script src="js/Camera.js" type="text/javascript" ></script>
+  <script src="js/Minortools.js" type="text/javascript" ></script>  
+  <script src="js/Shader.js" type="text/javascript" ></script>
+  <script src="js/NormalShader.js" type="text/javascript" ></script>
+  <script src="js/Program.js" type="text/javascript" ></script> 
 </body>
 </html>
