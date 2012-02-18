@@ -18,6 +18,12 @@ Yoyo.Model = function(a_name)
     this.m_shader = null;
 
     this.m_loaded = false;
+
+    //this.m_hasTexture = false;
+
+    this.m_vertexBuffer;
+    this.m_textureCoordinates;
+    this.m_normalBuffer;
 }
 
 Yoyo.Model.prototype.SetShader = function(a_shader)
@@ -25,8 +31,15 @@ Yoyo.Model.prototype.SetShader = function(a_shader)
     this.m_shader = a_shader;
 }
 
+Yoyo.Model.prototype.Draw = function(a_gl, a_camera)
+{
+    this.m_shader.Draw(a_gl, this, a_camera);
+}
+
 Yoyo.Model.prototype.CreateFromObj = function(a_path, a_gl)
 {
+    ///<summary>Creates vertex buffers e.t.c. from an wavefront .obj file </summary>
+
     if (a_path === undefined || a_path.length === undefined || a_path.length < 1)
     {
         throw "Needs a path to create a model";
@@ -67,10 +80,8 @@ Yoyo.Model.prototype.CreateFromObj = function(a_path, a_gl)
         //Will read IDs from face and fill it with data from f_textCoords
         var f_textureIndex = [];
 
-        //Possible Normal buffer & normalIndexes
-
-
-        for (i = 0; i < f_objData; i++) 
+        
+        for (i = 0; i < f_objData.length; i++) 
         {
             f_lineData = f_objData[i];            
             
@@ -103,19 +114,61 @@ Yoyo.Model.prototype.CreateFromObj = function(a_path, a_gl)
                 {
                     f_additionalData = f_data[j].split("/");
 
+                    //* 3 because it's 3 vertexes per ID (xyz) and -3 because the ID starts on 1 in the .obj file
+                    f_id = parseInt(f_additionalData[0] * 3, 10) - 3;
+                    f_verticeIndexBuffer.push(f_vertexBuffer[f_id++]);
+                    f_verticeIndexBuffer.push(f_vertexBuffer[f_id++]);
+                    f_verticeIndexBuffer.push(f_vertexBuffer[f_id]);
+
                     if (f_additionalData.length === 2)
                     {
                         //Texture index === [1]
+                        f_id = parseInt(f_additionalData[1] * 2, 10) - 2;
+                        f_textureIndex.push(f_textCoords[f_id++] );
+                        f_textureIndex.push(f_textCoords[f_id] );
                     }
                     else if (f_additionalData.length === 3)
                     {
                         //Normal index = [1]
                         //Texture index === [2]
+
+                        f_id = parseInt(f_additionalData[2] * 2, 10) - 2;
+                        f_textureIndex.push(f_textCoords[f_id++] );
+                        f_textureIndex.push(f_textCoords[f_id] );
                     }
                 }
             }
             //Reason for no else is that if some bad value would come in it doesn't get read and potentially crashes! 
         }//End for loop
+
+        try
+        {
+            //Creates the vertex buffer that is to be used!
+            m_that.m_vertexBuffer = a_gl.createBuffer();
+            a_gl.bindBuffer(a_gl.ARRAY_BUFFER, m_that.m_vertexBuffer);
+            a_gl.bufferData(a_gl.ARRAY_BUFFER, new Float32Array(f_verticeIndexBuffer), a_gl.STATIC_DRAW);
+            m_that.m_vertexBuffer.itemSize = 3;
+            m_that.m_vertexBuffer.numItems = f_verticeIndexBuffer.length / 3;
+
+            //If it has any texture info
+            if (f_textureIndex.length > 0)
+            {
+                m_that.m_textureCoordinates = a_gl.createBuffer();
+                a_gl.bindBuffer(a_gl.ARRAY_BUFFER, m_that.m_textureCoordinates);
+                a_gl.bufferData(a_gl.ARRAY_BUFFER, new Float32Array(f_textureIndex), a_gl.STATIC_DRAW);
+
+                m_that.m_textureCoordinates.itemSize = 2;
+                m_that.m_textureCoordinates.numItems = f_textureIndex.length * 0.5;                
+            }
+            m_that.m_loaded = true;
+
+        }
+        catch (e)
+        {
+            throw "Yoyo.Model.CreateFromObj: When setting buffers error: " + e.message;
+        }        
+
+        
 
 
     }, false);
