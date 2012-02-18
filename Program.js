@@ -13,19 +13,19 @@ window.onload = function()
 
         InitilizeScene: function(a_canvas) 
         {        
-            m_scene = new Yoyo.Scene(a_canvas);
-            console.log(m_scene);
+            this.m_scene = new Yoyo.Scene(a_canvas);                     
         }
     } );
 
     var m_program = new ApplicationModel();
-    //m_program.InitilizeScene(document.getElementById("glcanvas") );
-    
-    m_program.m_scene = new Yoyo.Scene(document.getElementById("glcanvas"));
-    m_program.m_scene.Render();
-    //m_program.m_scene = new Yoyo.Scene();
+    m_program.InitilizeScene(document.getElementById("glcanvas") );
+    //m_program.m_scene.Render();
 
-    //console.log (m_program.m_scene);
+    m_program.m_scene.LoadModel("testobject",Yoyo.ModelImportersTechs.Object);
+    m_program.m_scene.SetModelShader(Yoyo.Shadertype.Normal);
+
+    Yoyo.requestAnimFrame(m_program.m_scene);
+    
    
 }
 

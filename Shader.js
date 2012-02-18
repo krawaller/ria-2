@@ -5,78 +5,89 @@ if (window.Yoyo === undefined)
     window.Yoyo = {};   
 }
 
+Yoyo.Shadertype = { "Normal" : 0 };
+
 Yoyo.Shader = function()
 {
     this.m_vertexShader;
     this.m_fragmentShader;
 
-    this.m_shaderProgram;
+    this.m_loaded = false;
 
-    this.m_vertexPositionAttribute;
-    this.m_textureCoordAttribute;
+    //Shader texture objects
+    this.m_stos = [];
+
+    this.m_shaderProgram;    
 }
 
 Yoyo.Shader.prototype.InitShader = function(a_gl) {}
+
+Yoyo.Shader.prototype.CheckIfReady = function() {};
 
 Yoyo.Shader.prototype.LoadVertexShader = function(a_gl){}
 
 Yoyo.Shader.prototype.LoadFragmentShader = function(a_gl){}
 
-Yoyo.Shader.prototype.SetMatrixUniforms = function(a_scene) {};
+Yoyo.Shader.prototype.AddTexture = function(a_gl, a_path, a_samplerName) {};
 
-Yoyo.GetShader = function(a_gl, a_tagid) 
+Yoyo.Shader.prototype.Draw = function(a_gl, a_model, a_camera) {};
+
+Yoyo.Shader.prototype.SetMatrixUniforms = function(a_camera) {};
+
+
+//ShaderTexture Object
+
+Yoyo.ShaderTextureObject = function(a_path, a_sampler ,a_gl)
 {
-    ///<summary>Gets shader source code from tag ID from a script tag. Then checks the script type to make it vertex or fragment shader </summary>
+    if (!a_path)
+    {
+        throw("Yoyo.ShaderTextureObject: a_path is not defined");
+    }
+    else if (!a_path.length || a_path.length < 3)
+    {
+        throw("Yoyo.ShaderTextureObject: a_path must be 3 letters or longer eg: *.* ");
+    }
+    else if (!a_sampler)
+    {
+        throw("Yoyo.ShaderTextureObject: a_sampler is undefined");
+    }
+    else if (!a_gl)
+    {
+        throw("Yoyo.ShaderTextureObject: a_gl is undefined");
+    }
 
-    var shaderScript = document.getElementById(a_tagid);
+    this.m_loaded = false; 
+    //The texture when drawing
+    this.m_texture = a_gl.createTexture();
 
-    var shader;
-    var theSource = "";
-    var currentChild = shaderScript.firstChild;
-  
-    // Didn't find an element with the specified ID; abort.  
-    if (!shaderScript) 
+    //Used in drawing, say normalSampler has normalTexture
+    this.m_sampler = a_sampler;
+
+    //Image loading
+    var f_that = this;
+    var m_image = new Image();
+    m_image.src = a_path;
+
+    m_image.onload = function()
     {
-        return null;
+        var m_that = f_that;
+        m_that.LoadTexture(m_image, a_gl);        
     }
-  
-    // Walk through the source element's children, building the
-    // shader source string.  
-    while(currentChild) 
-    {
-        if (currentChild.nodeType == 3) 
-        {
-            theSource += currentChild.textContent;
-        }    
-        currentChild = currentChild.nextSibling;
-    }
-  
-    // Now figure out what type of shader script we have,
-    // based on its MIME type.
-    if (shaderScript.type == "x-shader/x-fragment") 
-    {
-        shader = a_gl.createShader(a_gl.FRAGMENT_SHADER);
-    } 
-    else if (shaderScript.type == "x-shader/x-vertex") 
-    {
-        shader = a_gl.createShader(a_gl.VERTEX_SHADER);
-    } 
-    else 
-    {
-        return null;  // Unknown shader type
-    }
-  
-    // Send the source to the shader object  
-    a_gl.shaderSource(shader, theSource);
-  
-    // Compile the shader program  
-    a_gl.compileShader(shader);
-  
-    // See if it compiled successfully  
-    if (!a_gl.getShaderParameter(shader, a_gl.COMPILE_STATUS)) 
-    {
-        throw "Yoyo.GetShader: An error occurred compiling the shaders: " + a_gl.getShaderInfoLog(shader) ;        
-    }
- 
-    return shader;
 }
+
+Yoyo.ShaderTextureObject.prototype.LoadTexture = function(a_image, a_gl)
+{
+    ///<summary>Loads a texture in a ShaderTextureObject (sto) </summary>
+
+    a_gl.bindTexture(a_gl.TEXTURE_2D, this.m_texture);
+    //Flips it cause it's upside down, so this is a -fix- so it's no need to flip it in the shader
+    a_gl.pixelStorei(a_gl.UNPACK_FLIP_Y_WEBGL, true);
+    a_gl.texImage2D(a_gl.TEXTURE_2D, 0, a_gl.RGBA, a_gl.RGBA, a_gl.UNSIGNED_BYTE, a_image);
+    a_gl.texParameteri(a_gl.TEXTURE_2D, a_gl.TEXTURE_MAG_FILTER, a_gl.LINEAR);
+    a_gl.texParameteri(a_gl.TEXTURE_2D, a_gl.TEXTURE_MIN_FILTER, a_gl.LINEAR_MIPMAP_NEAREST);
+    a_gl.generateMipmap(a_gl.TEXTURE_2D);
+    a_gl.bindTexture(a_gl.TEXTURE_2D, null);
+
+    this.m_loaded = true;
+}
+

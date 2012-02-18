@@ -9,24 +9,54 @@
 
     <!-- VERTEX shader -->
     <script id="vertexShader" type="x-shader/x-vertex">
-        attribute vec3 aVertexPosition;
+        attribute highp vec3 aVertexPosition;
+        attribute highp vec2 aTextureCoord;
 
-        uniform mat4 uMVMatrix;
-        uniform mat4 uProjMatrix;
+        uniform highp mat4 uMVMatrix;
+        uniform highp mat4 uProjMatrix;
+
+
+
+        varying highp vec4 m_position;
+        varying highp vec2 vTextureCoord;
 
         void main(void) 
         {
-            gl_Position = uProjMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+            m_position = uProjMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+
+            vTextureCoord = aTextureCoord;
+
+            gl_Position = m_position;
         }
     </script>
 
     <!-- FRAGMENT/ PIXEL shader -->
-    <script id="fragmentShader" type="x-shader/x-fragment">
-        precision mediump float;
+    <script id="fragmentShader" type="x-shader/x-fragment">      
+        uniform sampler2D uDiffuseSampler;
+        uniform sampler2D uNormalSampler;
+
+        varying highp vec4 m_position;
+        varying highp vec2 vTextureCoord;
 
         void main(void) 
         {
-            gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+            highp float f_depth = 1.0 - ( m_position.z / m_position.w);
+            f_depth *= 3.0;
+
+            highp vec4 diffuseColor = texture2D(uDiffuseSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+            highp vec4 normalColor = texture2D(uNormalSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+
+            /*normalColor.x += 0.01 * diffuseColor.x;
+            normalColor.y += 0.01 * diffuseColor.y;
+            normalColor.z += 0.1 * diffuseColor.z;*/
+            
+
+            gl_FragColor = vec4(f_depth * (diffuseColor.x + normalColor.x),f_depth * (diffuseColor.y + normalColor.y),f_depth * (diffuseColor.z + normalColor.z), 1.0);
+
+            //gl_FragColor = vec4(normalColor.xyz, 1.0);
+
+            //gl_FragColor = vec4(texelColor);
+            //gl_FragColor = vec4(1.0,0,1.0,1.0);
         }
     </script>
 
@@ -48,6 +78,7 @@
   <script src="Ajax.js" type="text/javascript" ></script>
   <script src="Model.js" type="text/javascript" ></script>
   <script src="Scene.js" type="text/javascript" ></script>
+  <script src="Camera.js" type="text/javascript" ></script>
   <script src="Minortools.js" type="text/javascript" ></script>  
   <script src="Shader.js" type="text/javascript" ></script>
   <script src="NormalShader.js" type="text/javascript" ></script>
