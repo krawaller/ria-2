@@ -1,5 +1,39 @@
 * { padding:0px; margin:0px; line-height:1; }
 
+body
+{
+    background-repeat:repeat-x;    
+    background:url("Images/bg.jpg");
+    height:100%;           
+}
+
+#wholepage
+{
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0px;
+    left:0px;
+    
+    z-index:-1;  
+    
+}
+
 .toolbar
 {    
+}
+
+.focused
+{
+    border-width:1px;  
+    border-style:solid;
+    border-color:Highlight;
+}
+
+.unfocused
+{
+    border-width:1px;  
+    border-style:solid;
+    border-color:#B6B6B6;
+    
 }

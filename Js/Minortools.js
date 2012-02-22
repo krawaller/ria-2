@@ -15,6 +15,8 @@ Yoyo.TextureFolderPath = "Textures/";
         GetShader( a_gl, a_tagid )
         GetTextureNumber( a_gl, a_id)
     requestAnimFrame
+    Add & Remove event
+    Stop event
 
 
 */
@@ -151,3 +153,39 @@ if (!Yoyo.requestAnimFrame)
         f_function(function(a_elapsedTime) { a_scene.Render(a_elapsedTime); });   
     }  
 }
+
+//*********************
+//Add & Remove event
+//**********************
+function addEvent( obj, type, fn ) {
+  if ( obj.attachEvent ) {
+    obj['e'+type+fn] = fn;
+    obj[type+fn] = function(){obj['e'+type+fn]( window.event );}
+    obj.attachEvent( 'on'+type, obj[type+fn] );
+  } else
+    obj.addEventListener( type, fn, false );
+}
+function removeEvent( obj, type, fn ) {
+  if ( obj.detachEvent ) {
+    obj.detachEvent( 'on'+type, obj[type+fn] );
+    obj[type+fn] = null;
+  } else
+    obj.removeEventListener( type, fn, false );
+}
+
+//*********************
+//Stop event
+//**********************
+
+function stop_event(e) {
+   if(!e) {
+      e = window.event;
+   }
+   if (e.stopPropagation) e.stopPropagation();
+   e.cancelBubble = true;
+   if (e.preventDefault) e.preventDefault();
+   e.returnValue = false;
+   return false;
+}
+
+

@@ -1,0 +1,12 @@
+# Some Comment!
+# Availible Shaders:
+# Normal (Phong-ish :( ) with broken normals!
+;
+Name Fine-HopeCube,
+Path Models/testobject.obj, 
+Shader Normal,
+DiffuseMap Textures/diffuse.png,
+NormalMap Textures/normal.png,
+SpecularMap Textures/specular.png,
+Texture Textures/emission.png,
+;

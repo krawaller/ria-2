@@ -72,7 +72,7 @@ Yoyo.NormalShader.prototype.InitShader = function(a_gl)
 
 
     //Textures
-    this.AddTexture(a_gl, Yoyo.TextureFolderPath + "testtexture.png", "uDiffuseSampler");
+    this.AddTexture(a_gl, Yoyo.TextureFolderPath + "gray_tex.png", "uDiffuseSampler");
 
     this.AddTexture(a_gl, Yoyo.TextureFolderPath + "TestNormalMap.png", "uNormalSampler");
     

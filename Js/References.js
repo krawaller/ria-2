@@ -8,4 +8,5 @@
 ///<reference path="NormalShader.js" />
 ///<reference path="Camera.js" />
 ///<reference path="Scene.js" />
+///<reference path="ViewerControls.js" />
 ///<reference path="Program.js" />
