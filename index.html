@@ -89,7 +89,11 @@
             
             highp vec3 lightColor = vec3(1, 1, 1);
             
+            //Real color!
             gl_FragColor = vec4(f_depth * (lightColor.x * diffuseColor.x * diffuseBrightness),f_depth * (lightColor.y * diffuseColor.y * diffuseBrightness),f_depth * (lightColor.z * diffuseColor.z * diffuseBrightness), 1.0);
+
+            //Worldpos debugging
+            //gl_FragColor = vec4(m_worldpos.x + (normalColor.x + diffuseColor.x * 0.001), m_worldpos.y + (normalColor.y + diffuseColor.y * 0.001), m_worldpos.z + (normalColor.x + diffuseColor.x * 0.001), 1.0);
 
             //Normal diffused color space
             //gl_FragColor = vec4(normalColor.x + (diffuseColor.x * 0.001),normalColor.y + (diffuseColor.y * 0.001), normalColor.z + (diffuseColor.z * 0.001), 1.0);
@@ -106,31 +110,38 @@
 	 
 <body>
     <!-- a div that covers whole area so body can register onclick events on whole page -->
-    <div id="wholepage" ></div>
+    <div id="wholepage" >
 
-    <noscript>This application requires javascript and HTML 5!</noscript>      
+        <noscript>This application requires javascript and HTML 5!</noscript>      
     
     
-    <canvas id="glcanvas" class="unfocused" width="640" height="480">  
-        Your browser doesn't appear to support the HTML5 <code>&lt;canvas&gt;</code> element.  
-    </canvas>
+        <canvas id="glcanvas" class="unfocused" width="640" height="480">  
+            Your browser doesn't appear to support the HTML5 <code>&lt;canvas&gt;</code> element.  
+        </canvas>
     
-    <div class="toolbar">
-      <p> This is temporary test! This is the toolbar position, Thanks to JS can't have infinite mouse movement :(</p>  
+        <div id="modellist">
+            
+        </div>
+        <div class="instructions">
+            <p> WASD to move forwards & backwards and strafe left & right. <br /> Arrow Keys to rotate camera</p>
+        </div>
     </div>
   
-  <script src="js/jquery.js" ></script>
-  <script src="js/Underscore.js" ></script>
-  <script src="js/Backbone.js" ></script>
-  <script src="js/glMatrix-9-5-0-min.js" type="text/javascript" ></script>
-  <script src="js/Ajax.js" type="text/javascript" ></script>
-  <script src="js/Model.js" type="text/javascript" ></script>
-  <script src="js/Scene.js" type="text/javascript" ></script>
-  <script src="js/Camera.js" type="text/javascript" ></script>
-  <script src="js/Minortools.js" type="text/javascript" ></script>  
-  <script src="js/Shader.js" type="text/javascript" ></script>
-  <script src="js/NormalShader.js" type="text/javascript" ></script>
-  <script src="js/ViewerControls.js" type="text/javascript" ></script>
-  <script src="js/Program.js" type="text/javascript" ></script> 
+    <script src="js/Utility/jquery.js" ></script>
+    <script src="js/Utility/Underscore.js" ></script>
+    <script src="js/Utility/Backbone.js" ></script>
+    <script src="js/Utility/glMatrix-9-5-0-min.js" type="text/javascript" ></script>
+    <script src="js/Utility/Ajax.js" type="text/javascript" ></script>
+    <script src="js/Utility/Minortools.js" type="text/javascript" ></script> 
+    <script src="js/Model.js" type="text/javascript" ></script>
+    <script src="js/Scene.js" type="text/javascript" ></script>
+    <script src="js/Camera.js" type="text/javascript" ></script>  
+    <script src="js/Shader.js" type="text/javascript" ></script>
+    <script src="js/NormalShader.js" type="text/javascript" ></script>
+    <script src="js/ViewerControls.js" type="text/javascript" ></script>
+    <script src="js/ModelListItem.js" type="text/javascript" ></script>
+    <script src="js/ModelListHandler.js" type="text/javascript" ></script>
+    <script src="js/View/ModelListView.js" type="text/javascript" ></script>
+    <script src="js/Program.js" type="text/javascript" ></script> 
 </body>
 </html>

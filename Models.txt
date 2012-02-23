@@ -2,11 +2,16 @@
 # Availible Shaders:
 # Normal (Phong-ish :( ) with broken normals!
 ;
-Name Fine-HopeCube,
-Path Models/testobject.obj, 
-Shader Normal,
-DiffuseMap Textures/diffuse.png,
-NormalMap Textures/normal.png,
-SpecularMap Textures/specular.png,
-Texture Textures/emission.png,
+name Rose
+path Models/rose.obj
+thumbnail Models/Thumbnails/RoseThumbnail.png
+shader normal
+diffusemap Textures/rose.png
+normalmap Textures/rosenormal.png
 ;
+name Fine-HopeCube
+path Models/testobject.obj
+thumbnail Models/Thumbnails/HopecubeThumbnail.png
+shader Normal
+diffusemap Textures/testtexture.png
+normalmap Textures/TestNormalMap.png

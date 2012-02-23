@@ -72,12 +72,13 @@ Yoyo.NormalShader.prototype.InitShader = function(a_gl)
 
 
     //Textures
-    this.AddTexture(a_gl, Yoyo.TextureFolderPath + "gray_tex.png", "uDiffuseSampler");
+    this.AddTexture(a_gl, Yoyo.TextureFolderPath + "rose.png", "uDiffuseSampler");
 
-    this.AddTexture(a_gl, Yoyo.TextureFolderPath + "TestNormalMap.png", "uNormalSampler");
+    this.AddTexture(a_gl, Yoyo.TextureFolderPath + "rosenormal.png", "uNormalSampler");
     
     //this.CheckIfReady();            
 }
+
 
 Yoyo.NormalShader.prototype.CheckIfReady = function()
 {

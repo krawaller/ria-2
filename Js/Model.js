@@ -7,14 +7,16 @@ if (window.Yoyo === undefined)
 
 Yoyo.ModelImportersTechs = { "Object" : 0 };
 
-Yoyo.Model = function(a_name)
+Yoyo.Model = function(a_name,a_path)
 {
-    if (!a_name)
+    if (!a_path)
     {
         throw "Yoyo.Model: a_name is not a name!"; 
     } 
 
     this.m_name = a_name;
+    this.m_path = a_path;
+
     this.m_shader = null;
 
     this.m_loaded = false;
@@ -80,36 +82,19 @@ Yoyo.Model.prototype.SetRotation = function(a_radian, a_axis)
             mat4.rotateZ(f_rotationZ, a_radian * a_axis[2] );
 
             mat4.multiply(this.m_rotation, f_rotationZ);
-        }
-        
-        //mat4.rotateY(this.m_rotation, a_radian * a_axis[1] );
-        //mat4.rotateZ(this.m_rotation, a_radian * a_axis[2] );
-        
-
-        //mat4.rotate(this.m_rotation, a_radian, a_axis);
+        }        
+       
         this.UpdateWorldMatrix();
     }    
 }
 
 Yoyo.Model.prototype.UpdateWorldMatrix = function()
-{    
-    //mat4.identity(this.m_worldMatrix);
-
-    /*
-    mat4.set(this.m_translateMatrix, this.m_worldMatrix);
-    mat4.multiply(this.m_worldMatrix, this.m_rotation);    
-    mat4.multiply(this.m_worldMatrix, this.m_scale);  
-    */ 
-
+{  
     mat4.identity(this.m_worldMatrix);
     mat4.multiply(this.m_worldMatrix, this.m_scale);
-    //mat4.multiply(this.m_worldMatrix, this.m_translateMatrix);
+    
     mat4.translate(this.m_worldMatrix, this.m_position);    
     mat4.multiply(this.m_worldMatrix, this.m_rotation);
-      
-    
-    
-    
        
 }
 
@@ -123,15 +108,30 @@ Yoyo.Model.prototype.Draw = function(a_gl, a_camera)
     this.m_shader.Draw(a_gl, this, a_camera);
 }
 
-Yoyo.Model.prototype.CreateFromObj = function(a_path, a_gl)
+Yoyo.Model.prototype.LoadModel = function(a_gl)
+{
+    var f_extension = this.m_path.split(".");
+    f_extension = f_extension[f_extension.length -1];
+
+    switch (Yoyo.GetModelImporterTech(f_extension) )
+    {
+        case Yoyo.ModelImportersTechs.Object:
+            this.CreateFromObj(a_gl);
+            break;
+        default:
+            throw ("Yoyo.Model.LoadModel: Not a known file extension so can't pick model importer technique " + f_extension);
+    }
+}
+
+Yoyo.Model.prototype.CreateFromObj = function(a_gl)
 {
     ///<summary>Creates vertex buffers e.t.c. from an wavefront .obj file </summary>
 
-    if (a_path === undefined || a_path.length === undefined || a_path.length < 1)
+    /*if (a_path === undefined || a_path.length === undefined || a_path.length < 1)
     {
         throw "Needs a path to create a model";
-    }
-    else if (!a_gl)
+    }*/
+    if (!a_gl)
     {
         throw "Needs a gl object";
     }
@@ -141,9 +141,9 @@ Yoyo.Model.prototype.CreateFromObj = function(a_path, a_gl)
 
     //Reading the file synchronously, possibly bad if it's big big models...
     //So possible optimization later on: Make it asynchronous and throw events when you click!
-    new Yoyo.Ajax.ReadFile(a_path, function(a_objFile)
-    {
-        var m_that = f_that;
+    new Yoyo.Ajax.ReadFile(this.m_path, function(a_objFile)
+    {       
+        var m_that = f_that;        
 
         var f_objData = a_objFile.split("\n");
         var f_lineData;
@@ -167,12 +167,12 @@ Yoyo.Model.prototype.CreateFromObj = function(a_path, a_gl)
         //Will read IDs from face and fill it with data from f_textCoords
         var f_textureIndex = [];
 
-        
+        //var f_stringtest;
         for (i = 0; i < f_objData.length; i++) 
         {
             f_lineData = f_objData[i];            
             
-            f_data = f_lineData.split(" ");
+            f_data = f_lineData.split(" ");           
             
             //First vertices, then texture cordinates, then normal cordinates, then faces ids!'
             //v x y z
@@ -253,11 +253,8 @@ Yoyo.Model.prototype.CreateFromObj = function(a_path, a_gl)
         catch (e)
         {
             throw "Yoyo.Model.CreateFromObj: When setting buffers error: " + e.message;
-        }        
-
-        
-
-
+        }
+                           
     }, false);
 }
 

@@ -29,9 +29,10 @@ Yoyo.Scene = function(a_canvas)
     this.InitWebGL();
     
     this.m_gl.enable(this.m_gl.DEPTH_TEST);
-    this.m_camera =  new Yoyo.Camera( vec3.create([0,2,-3]), 0,0, this.m_canvas.width, this.m_canvas.height );
+    this.m_camera =  new Yoyo.Camera( vec3.create([0,2,-4]), Math.PI * 0.5 ,0, this.m_canvas.width, this.m_canvas.height );
     
-    this.m_lastRender;      
+    this.m_lastRender;   
+    
 }
 
 Yoyo.Scene.prototype.InitWebGL = function() 
@@ -58,31 +59,45 @@ Yoyo.Scene.prototype.InitWebGL = function()
     }    
 }
 
-Yoyo.Scene.prototype.LoadModel = function(a_modelname, a_modelImporterTech)
+//Adds a model.. called that incase I some day wants more than 1 model!
+Yoyo.Scene.prototype.AddModel = function(a_modelListItem)
+{
+    if (this.m_currentModel === null || this.m_currentModel.m_path !== a_modelListItem.m_path)
+    {
+        this.m_currentModel = new Yoyo.Model(a_modelListItem.m_name, a_modelListItem.m_path);
+        this.m_currentModel.LoadModel(this.m_gl);
+
+        this.SetModelShader(a_modelListItem.m_shaderType, a_modelListItem.m_textures);
+
+        this.Render(0);
+    }
+}
+/*
+Yoyo.Scene.prototype.LoadModel = function(a_modelImporterTech)
 {
     /// <summary>Loads a model from model file and sets m_currentModel as the model.</summary>
     /// <param name="a_modelname" type="string">The name of the model, no file extension</param>
     /// <param name="a_modelImporterTech" type="ModelImporterTechs">a model importer technique, like object which tries to create model from an object file.</param>   
     
-    if (this.m_currentModel === null || this.m_currentModel.m_name !== a_modelname)
+    if (this.m_currentModel === null || this.m_currentModel.m_path !== a_path)
     {
         //Reset the rotation matrix so new model doesn't have some odd rotation!   
-        mat4.identity(this.m_rotationMatrix);
+        //mat4.identity(this.m_rotationMatrix);
         //Creates a new model
         this.m_currentModel = new Yoyo.Model(a_modelname);
 
         switch (a_modelImporterTech)
         {
             case Yoyo.ModelImportersTechs.Object:          
-                this.m_currentModel.CreateFromObj(Yoyo.ModelFolderPath + a_modelname + ".obj", this.m_gl);
+                this.m_currentModel.CreateFromObj(this.m_gl);
                 break;
             default:
                 throw "Yoyo.Scene.LoadModel: Not an existing model importer technique.";
         }    
     }    
 }
-
-Yoyo.Scene.prototype.SetModelShader = function(a_shadertype)
+*/
+Yoyo.Scene.prototype.SetModelShader = function(a_shadertype, a_textures)
 {
     if (this.m_currentModel === null)
     {
