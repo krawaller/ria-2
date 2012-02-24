@@ -9,9 +9,16 @@ shader normal
 diffusemap Textures/rose.png
 normalmap Textures/rosenormal.png
 ;
-name Fine-HopeCube
-path Models/testobject.obj
+name HopeCube
+path Models/testobject2.obj
 thumbnail Models/Thumbnails/HopecubeThumbnail.png
+shader Normal
+diffusemap Textures/testtexture.png
+normalmap Textures/TestNormalMap.png
+;
+name HopeCubes
+path Models/hopecube3.obj
+thumbnail Models/Thumbnails/DoublecubeThumb.png
 shader Normal
 diffusemap Textures/testtexture.png
 normalmap Textures/TestNormalMap.png

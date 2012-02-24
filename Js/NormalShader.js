@@ -10,6 +10,7 @@ Yoyo.NormalShader = function()
 
     this.m_vertexPositionAttribute;
     this.m_textureCoordAttribute;
+    this.m_normalPositionAttribute;
 
     //Holds [u]niform location in the shader
     this.m_uProjMatrix;
@@ -32,12 +33,20 @@ Yoyo.NormalShader.prototype.LoadFragmentShader = function(a_gl)
     this.m_fragmentShader = Yoyo.GetShader(a_gl, "fragmentShader");
 }
 
-Yoyo.NormalShader.prototype.InitShader = function(a_gl)
-{  
+Yoyo.NormalShader.prototype.InitShader = function(a_gl, a_textures)
+{
+    ///<summary>Creates the shaderprogram, sets the vertex & fragment shader, Sets all getters from the glsl code, sets all textures</summary> 
+    ///<param type="WebGL" name="a_gl" >The webgl object </param>
+    ///<param type="TextureObject[]" name="a_textures" >An array with TextureObjects</param>
     if (a_gl === undefined || a_gl === null)
     {
         throw "Yoyo.Shader.InitShader: Needs a_gl object!";
     }
+    else if (a_textures.length === undefined)
+    {
+        throw "Yoyo.Shader.InitShader: a_textures has to be an array";
+    }
+    
     
     this.LoadVertexShader(a_gl);
     this.LoadFragmentShader(a_gl);    
@@ -61,6 +70,9 @@ Yoyo.NormalShader.prototype.InitShader = function(a_gl)
     
     this.m_textureCoordAttribute = a_gl.getAttribLocation(this.m_shaderProgram, "aTextureCoord");
     a_gl.enableVertexAttribArray(this.m_textureCoordAttribute);
+
+    this.m_normalPositionAttribute = a_gl.getAttribLocation(this.m_shaderProgram, "aNormalPosition");
+    a_gl.enableVertexAttribArray(this.m_normalPositionAttribute);
     
     this.m_uProjMatrix = a_gl.getUniformLocation(this.m_shaderProgram, "uProjMatrix");
     
@@ -70,15 +82,26 @@ Yoyo.NormalShader.prototype.InitShader = function(a_gl)
 
     this.m_uLightDir = a_gl.getUniformLocation(this.m_shaderProgram, "uLightDir");
 
+    var i;
+    var f_texture;    
 
-    //Textures
-    this.AddTexture(a_gl, Yoyo.TextureFolderPath + "rose.png", "uDiffuseSampler");
+    for (var i = 0; i < a_textures.length; i++) 
+    {
+        f_texture = a_textures[i];
 
-    this.AddTexture(a_gl, Yoyo.TextureFolderPath + "rosenormal.png", "uNormalSampler");
+        switch (f_texture.m_textureType)
+        {
+            case Yoyo.Texturetype.Diffuse:
+                this.AddTexture(a_gl, f_texture.m_path, "uDiffuseSampler");
+                break;
+            case Yoyo.Texturetype.Normal:
+                this.AddTexture(a_gl, f_texture.m_path, "uNormalSampler");
+                break;
+        }
+
+    }
     
-    //this.CheckIfReady();            
 }
-
 
 Yoyo.NormalShader.prototype.CheckIfReady = function()
 {
@@ -101,9 +124,17 @@ Yoyo.NormalShader.prototype.AddTexture = function(a_gl, a_path, a_samplerName)
 {   
     var f_sampler = a_gl.getUniformLocation(this.m_shaderProgram, a_samplerName);       
 
-    var f_sto = new Yoyo.ShaderTextureObject(a_path, f_sampler, a_gl);
+    if (f_sampler !== null)
+    {
 
-    this.m_stos.push(f_sto);
+        var f_sto = new Yoyo.ShaderTextureObject(a_path, f_sampler, a_gl);
+
+        this.m_stos.push(f_sto);
+    }
+    else
+    {
+        console.log("Could not reach " + a_samplerName + " probably was optimized away");
+    }
 }
 
 Yoyo.NormalShader.prototype.SetMatrixUniforms = function(a_gl,a_camera,a_model)
@@ -130,7 +161,7 @@ Yoyo.NormalShader.prototype.Draw = function(a_gl, a_model, a_camera)
 
         //Texture stuff
         a_gl.bindBuffer(a_gl.ARRAY_BUFFER, a_model.m_textureCoordinates);
-        a_gl.vertexAttribPointer(this.m_textureCoordAttribute, a_model.m_textureCoordinates.itemSize, a_gl.FLOAT, false, 0, 0);
+        a_gl.vertexAttribPointer(this.m_textureCoordAttribute, a_model.m_textureCoordinates.itemSize, a_gl.FLOAT, false, 0, 0);     
 
         for (i = 0; i < this.m_stos.length; i++) 
         {              
@@ -141,6 +172,10 @@ Yoyo.NormalShader.prototype.Draw = function(a_gl, a_model, a_camera)
             //binds sampler, and with what texture ID! had 0 before so could not use 2 or more textures
             a_gl.uniform1i(this.m_stos[i].m_sampler, i);
         }
+        
+        a_gl.bindBuffer(a_gl.ARRAY_BUFFER, a_model.m_normalBuffer);
+        a_gl.vertexAttribPointer(this.m_normalPositionAttribute, a_model.m_normalBuffer.itemSize, a_gl.FLOAT, false, 0, 0);
+              
 
         this.SetMatrixUniforms(a_gl,a_camera,a_model);
         a_gl.drawArrays(a_gl.TRIANGLES, 0 , a_model.m_vertexBuffer.numItems);

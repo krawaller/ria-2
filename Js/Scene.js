@@ -29,6 +29,7 @@ Yoyo.Scene = function(a_canvas)
     this.InitWebGL();
     
     this.m_gl.enable(this.m_gl.DEPTH_TEST);
+    
     this.m_camera =  new Yoyo.Camera( vec3.create([0,2,-4]), Math.PI * 0.5 ,0, this.m_canvas.width, this.m_canvas.height );
     
     this.m_lastRender;   
@@ -110,7 +111,7 @@ Yoyo.Scene.prototype.SetModelShader = function(a_shadertype, a_textures)
     {
         case Yoyo.Shadertype.Normal: 
             f_shader = new Yoyo.NormalShader();
-            f_shader.InitShader(this.m_gl);
+            f_shader.InitShader(this.m_gl, a_textures);
             break;
         default:
             throw "Yoyo.Scene.SetModelShader: Not known shadertype";

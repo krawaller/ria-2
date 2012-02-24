@@ -167,6 +167,10 @@ Yoyo.Model.prototype.CreateFromObj = function(a_gl)
         //Will read IDs from face and fill it with data from f_textCoords
         var f_textureIndex = [];
 
+        var f_normals = [];
+
+        var f_normalIndex = [];
+
         //var f_stringtest;
         for (i = 0; i < f_objData.length; i++) 
         {
@@ -191,7 +195,9 @@ Yoyo.Model.prototype.CreateFromObj = function(a_gl)
             //vn x y z
             else if (f_data[0] === "vn")
             {
-                
+                f_normals.push(parseFloat(f_data[1]) );
+                f_normals.push(parseFloat(f_data[2]) );
+                f_normals.push(parseFloat(f_data[3]) );
             }
             //f vID  || vID/vtID  || vID/vnID/vtID  || vID//vtID   
             else if (f_data[0] === "f")
@@ -216,12 +222,19 @@ Yoyo.Model.prototype.CreateFromObj = function(a_gl)
                     }
                     else if (f_additionalData.length === 3)
                     {
-                        //Normal index = [1]
-                        //Texture index === [2]
-
-                        f_id = parseInt(f_additionalData[2] * 2, 10) - 2;
+                        //Texture index === [1]
+                        //Normal index = [2]
+                        
+                        //Texture
+                        f_id = parseInt(f_additionalData[1] * 2, 10) - 2;
                         f_textureIndex.push(f_textCoords[f_id++] );
                         f_textureIndex.push(f_textCoords[f_id] );
+
+                        //Normal
+                        f_id = parseInt(f_additionalData[2] * 3, 10) - 3;
+                        f_normalIndex.push(-f_normals[f_id++] );
+                        f_normalIndex.push(-f_normals[f_id++] );
+                        f_normalIndex.push(-f_normals[f_id] );
                     }
                 }
             }
@@ -247,6 +260,16 @@ Yoyo.Model.prototype.CreateFromObj = function(a_gl)
                 m_that.m_textureCoordinates.itemSize = 2;
                 m_that.m_textureCoordinates.numItems = f_textureIndex.length * 0.5;                
             }
+
+            if (f_normalIndex.length > 0)
+            {
+                m_that.m_normalBuffer = a_gl.createBuffer();
+                a_gl.bindBuffer(a_gl.ARRAY_BUFFER, m_that.m_normalBuffer);
+                a_gl.bufferData(a_gl.ARRAY_BUFFER, new Float32Array(f_normalIndex), a_gl.STATIC_DRAW);
+                m_that.m_normalBuffer.itemSize = 3;
+                m_that.m_normalBuffer.numItems = f_normalIndex.length / 3;
+            }
+
             m_that.m_loaded = true;
 
         }

@@ -33,6 +33,9 @@ Yoyo.ViewerControls = Backbone.View.extend(
     m_turnDownwardsKey:40,
     m_turnLeftKey:37,
     m_turnRightKey:39,
+
+    m_arrowUpKey:38,
+    m_arrowDownKey:40,
     
     m_strafeLeftPressed:false,
     m_strafeRightPressed:false,
@@ -139,6 +142,10 @@ Yoyo.ViewerControls = Backbone.View.extend(
                 f_that.m_keyPressTimerID = setTimeout(function() { f_that.ViewerControlEvent(); }, 0);
             }
          
+            if (e.keyCode === f_that.m_arrowUpKey || e.keyCode === f_that.m_arrowDownKey)
+            {
+                stop_event(e);
+            }
             
         } );
 
@@ -173,7 +180,7 @@ Yoyo.ViewerControls = Backbone.View.extend(
             if (e.keyCode === f_that.m_turnUpwardsKey && f_that.m_turnUpwardsPressed )
             {                    
                 f_that.m_turnUpwardsPressed = false;
-                f_that.m_keysPressed--;                
+                f_that.m_keysPressed--;                              
             }
 
             if (e.keyCode === f_that.m_turnDownwardsKey && f_that.m_turnDownwardsPressed )
@@ -302,25 +309,25 @@ Yoyo.ViewerControls.prototype.ViewerControlEvent = function()
 
         if (this.m_turnUpwardsPressed)
         {
-            this.m_scene.m_camera.TurnUpwards(f_elapsedTime);
+            this.m_scene.m_camera.TurnUpwards(f_elapsedTime);           
             f_setCameraDirection = true;
         }
 
         if (this.m_turnDownwardsPressed)
         {
-            this.m_scene.m_camera.TurnDownwards(f_elapsedTime);
+            this.m_scene.m_camera.TurnDownwards(f_elapsedTime);            
             f_setCameraDirection = true;
         }
 
         if (this.m_turnLeftPressed)
         {
-            this.m_scene.m_camera.TurnLeft(f_elapsedTime);
+            this.m_scene.m_camera.TurnLeft(f_elapsedTime);           
             f_setCameraDirection = true;
         }
 
         if (this.m_turnRightPressed)
         {
-            this.m_scene.m_camera.TurnRight(f_elapsedTime);
+            this.m_scene.m_camera.TurnRight(f_elapsedTime);            
             f_setCameraDirection = true;
         }
         
@@ -335,12 +342,14 @@ Yoyo.ViewerControls.prototype.ViewerControlEvent = function()
                 
                 if (this.m_totalmouseY !== 0)
                 {                    
-                    this.m_scene.m_camera.RotateVertical(-this.m_totalmouseY);                    
+                    this.m_scene.m_camera.RotateVertical(-this.m_totalmouseY);     
+                                   
                 }                
 
                 if (this.m_totalmouseX !== 0)
                 {                    
                     this.m_scene.m_camera.RotateHorizontal(this.m_totalmouseX);
+                    //this.m_scene.m_camera.SetCameraDirection(); 
                 }
                 
                 f_setCameraDirection = true;
@@ -361,6 +370,7 @@ Yoyo.ViewerControls.prototype.ViewerControlEvent = function()
                         
         }    
         
+        //This was a bad idea, it caused camera to roll
         if (f_setCameraDirection)
         {
             this.m_scene.m_camera.SetCameraDirection(); 
@@ -381,6 +391,7 @@ Yoyo.ViewerControls.prototype.ViewerControlEvent = function()
     }
 }   
 
+//INcase of different browsers or something, might need different keys!
 Yoyo.ViewerControls.prototype.SetControlKeys = function()
 {    
     this.m_strafeLeftKey = 65;
@@ -391,6 +402,9 @@ Yoyo.ViewerControls.prototype.SetControlKeys = function()
     this.m_turnDownwards = 40;
     this.m_turnLeftKey = 37;
     this.m_turnRightKey = 39; 
+
+    this.m_arrowUpKey = 38;
+    this.m_arrowDownKey = 40;
 }
 /*
 Yoyo.ViewerControls.prototype.UnsetPressedKeys = function()

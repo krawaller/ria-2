@@ -20,7 +20,7 @@ Yoyo.Shader = function()
     this.m_shaderProgram;    
 }
 
-Yoyo.Shader.prototype.InitShader = function(a_gl) {}
+Yoyo.Shader.prototype.InitShader = function(a_gl, a_textures) {}
 
 Yoyo.Shader.prototype.CheckIfReady = function() {};
 
