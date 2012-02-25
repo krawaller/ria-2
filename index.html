@@ -6,7 +6,6 @@
     
     <link rel="Stylesheet" href="style.css" type="text/css" />  
 
-
     <!-- VERTEX shader -->
     <script id="vertexShader" type="x-shader/x-vertex">
         attribute highp vec3 aVertexPosition;
@@ -44,10 +43,18 @@
 
     <!-- FRAGMENT/ PIXEL shader -->
     <script id="fragmentShader" type="x-shader/x-fragment">             
+        struct DirectionalLight 
+        {            
+            highp vec3 m_lightDir;
+            highp vec3 m_lightColor;
+        };
+        
         uniform sampler2D uDiffuseSampler;
         uniform sampler2D uNormalSampler;
         //Gets an already normalized lightDir
         uniform highp vec3 uLightDir;
+
+        uniform DirectionalLight uDirectionalLight;        
 
         varying highp vec4 m_position;
         varying highp vec2 vTextureCoord; 
@@ -60,18 +67,26 @@
         void main(void) 
         {
             highp float f_depth = 1.0 - ( m_position.z / m_position.w);
-            //f_depth *= 3.0; 
-            f_depth = 1.0;           
+            f_depth = 1.0;                             
 
             highp vec4 diffuseColor = texture2D(uDiffuseSampler, vec2(vTextureCoord.s, vTextureCoord.t));
             highp vec3 normalColor = vec3(texture2D(uNormalSampler, vec2(vTextureCoord.s, vTextureCoord.t)));
 
-            //the normal pos in tangentspace, already normalized!
+
+            highp vec3 ambientColor = vec3(0.2 * diffuseColor);
+
+            highp vec3 finalColor = vec3(ambientColor);   
+
+            /*
+                Calculate Worldpos normal!
+            */
+
+            //the normal from normalMap in tangentspace, need to get tangent & binormal of face to create matrix
+            //to multiply it with this to move ts_normal to worldspace!
             highp vec3 ts_normal = (normalColor - 0.5) * 2.0;            
 
             highp vec3 tangent;
 
-            //This ts_normal should be the face normal instead
             highp vec3 c1 = cross(m_wsnormal, vec3(0.0, 0.0, 1.0)); 
 	        highp vec3 c2 = cross(m_wsnormal, vec3(0.0, 1.0, 0.0));
 	        if(length(c1) > length(c2)) 
@@ -91,13 +106,27 @@
             highp mat3 rotmat = mat3(tangent,binormal,m_wsnormal);
             
             highp vec3 ws_normal = normalize(rotmat * ts_normal);          
-               
-            highp float diffuseBrightness = clamp(dot(ws_normal, uLightDir), 0.0, 1.0);
             
-            highp vec3 lightColor = vec3(1, 1, 1);
+            /*
+                End of ws normal calculation
+            */
+            
+            //uDirectionalLight.m_lightDir = vec3(0,-1,0);
+            //uDirectionalLight.m_lightColor = vec(0.4,0.6,0.4);
+               
+            highp float diffuseIntensity = clamp(dot(ws_normal, uDirectionalLight.m_lightDir), 0.0, 1.0);           
+            
+            highp vec3 final_diffuseColor = diffuseColor.xyz * vec3(uDirectionalLight.m_lightColor);
+            final_diffuseColor *= diffuseIntensity;
+
+            finalColor += final_diffuseColor;
             
             //Real color!
-            gl_FragColor = vec4(f_depth * (lightColor.x * diffuseColor.x * diffuseBrightness),f_depth * (lightColor.y * diffuseColor.y * diffuseBrightness),f_depth * (lightColor.z * diffuseColor.z * diffuseBrightness), 1.0);
+            gl_FragColor = vec4(f_depth * finalColor, 1.0);
+
+            /*
+                Debug stuff
+            */
 
             //Diffusetexture color, no light
             //gl_FragColor = vec4( diffuseColor.x, diffuseColor.y, diffuseColor.z, 1.0);
@@ -123,19 +152,20 @@
 <body>
     <!-- a div that covers whole area so body can register onclick events on whole page -->
     <div id="wholepage" >
-
-        <noscript>This application requires javascript and HTML 5!</noscript>      
+        <div id="maincontent">
+            <noscript>This application requires javascript and HTML 5!</noscript>      
     
     
-        <canvas id="glcanvas" class="unfocused" width="640" height="480">  
-            Your browser doesn't appear to support the HTML5 <code>&lt;canvas&gt;</code> element.  
-        </canvas>
+            <canvas id="glcanvas" width="640" height="480">  
+                Your browser doesn't appear to support the HTML5 <code>&lt;canvas&gt;</code> element.  
+            </canvas>
     
-        <div id="modellist">
+            <div id="modellist">
             
-        </div>
-        <div class="instructions">
-            <p> WASD to move forwards & backwards and strafe left & right. <br /> Arrow Keys to rotate camera</p>
+            </div>
+            <div class="instructions">
+                <p> WASD to move forwards & backwards and strafe left & right. <br /> Arrow Keys to rotate camera</p>
+            </div>
         </div>
     </div>
   
@@ -154,6 +184,7 @@
     <script src="js/ModelListItem.js" type="text/javascript" ></script>
     <script src="js/ModelListHandler.js" type="text/javascript" ></script>
     <script src="js/View/ModelListView.js" type="text/javascript" ></script>
+    <script src="Js/Model/Lights.js" type="text/javascript"></script>
     <script src="js/Program.js" type="text/javascript" ></script> 
 </body>
 </html>

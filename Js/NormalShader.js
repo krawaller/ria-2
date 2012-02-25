@@ -8,6 +8,8 @@ Yoyo.NormalShader = function()
 {
     Yoyo.Shader.call(this);
 
+    this.m_type = Yoyo.Shadertype.Normal;
+
     this.m_vertexPositionAttribute;
     this.m_textureCoordAttribute;
     this.m_normalPositionAttribute;
@@ -17,7 +19,9 @@ Yoyo.NormalShader = function()
     this.m_uMVMatrix; 
     this.m_uWorldMatrix;
 
-    this.m_uLightDir;
+    this.m_uDirectionalLight = { "lightDirection":null, "lightColor" : null };
+
+    //this.m_uLightDir;
 }
 
 //Makes NormalShader inherit from Yoyo.Shader!
@@ -80,7 +84,10 @@ Yoyo.NormalShader.prototype.InitShader = function(a_gl, a_textures)
 
     this.m_uWorldMatrix = a_gl.getUniformLocation(this.m_shaderProgram, "uWorldMatrix");
 
-    this.m_uLightDir = a_gl.getUniformLocation(this.m_shaderProgram, "uLightDir");
+    this.m_uDirectionalLight.lightDirection = a_gl.getUniformLocation(this.m_shaderProgram,"uDirectionalLight.m_lightDir");
+    this.m_uDirectionalLight.lightColor = a_gl.getUniformLocation(this.m_shaderProgram,"uDirectionalLight.m_lightColor");
+
+    //this.m_uLightDir = a_gl.getUniformLocation(this.m_shaderProgram, "uLightDir");
 
     var i;
     var f_texture;    
@@ -137,7 +144,7 @@ Yoyo.NormalShader.prototype.AddTexture = function(a_gl, a_path, a_samplerName)
     }
 }
 
-Yoyo.NormalShader.prototype.SetMatrixUniforms = function(a_gl,a_camera,a_model)
+Yoyo.NormalShader.prototype.SetMatrixUniforms = function(a_gl,a_camera,a_model, a_directionalLight)
 {
     a_gl.uniformMatrix4fv(this.m_uProjMatrix, false, a_camera.m_projectionMatrix);
 
@@ -145,10 +152,13 @@ Yoyo.NormalShader.prototype.SetMatrixUniforms = function(a_gl,a_camera,a_model)
 
     a_gl.uniformMatrix4fv(this.m_uWorldMatrix, false, a_model.m_worldMatrix);
 
-    a_gl.uniform3f(this.m_uLightDir, a_camera.m_cameraDir[0], a_camera.m_cameraDir[1], a_camera.m_cameraDir[2]);
+    a_gl.uniform3f(this.m_uDirectionalLight.lightDirection, a_directionalLight.m_lightDirection[0], a_directionalLight.m_lightDirection[1], a_directionalLight.m_lightDirection[2]);
+    a_gl.uniform3f(this.m_uDirectionalLight.lightColor, a_directionalLight.m_lightColor[0], a_directionalLight.m_lightColor[1], a_directionalLight.m_lightColor[2]);
+
+    //a_gl.uniform3f(this.m_uLightDir, a_camera.m_cameraDir[0], a_camera.m_cameraDir[1], a_camera.m_cameraDir[2]);
 }
 
-Yoyo.NormalShader.prototype.Draw = function(a_gl, a_model, a_camera)
+Yoyo.NormalShader.prototype.Draw = function(a_gl, a_model, a_camera, a_directionalLight)
 {    
     ///<summary> Draws a model using the shader code e.t.c. </summary>
     try
@@ -177,7 +187,7 @@ Yoyo.NormalShader.prototype.Draw = function(a_gl, a_model, a_camera)
         a_gl.vertexAttribPointer(this.m_normalPositionAttribute, a_model.m_normalBuffer.itemSize, a_gl.FLOAT, false, 0, 0);
               
 
-        this.SetMatrixUniforms(a_gl,a_camera,a_model);
+        this.SetMatrixUniforms(a_gl,a_camera,a_model, a_directionalLight);
         a_gl.drawArrays(a_gl.TRIANGLES, 0 , a_model.m_vertexBuffer.numItems);
     }
     catch (e)

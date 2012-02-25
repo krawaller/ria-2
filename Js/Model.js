@@ -17,6 +17,8 @@ Yoyo.Model = function(a_name,a_path)
     this.m_name = a_name;
     this.m_path = a_path;
 
+    //this.m_shaderType;
+
     this.m_shader = null;
 
     this.m_loaded = false;
@@ -103,9 +105,9 @@ Yoyo.Model.prototype.SetShader = function(a_shader)
     this.m_shader = a_shader;
 }
 
-Yoyo.Model.prototype.Draw = function(a_gl, a_camera)
+Yoyo.Model.prototype.Draw = function(a_gl, a_camera, a_directionalLight)
 {
-    this.m_shader.Draw(a_gl, this, a_camera);
+    this.m_shader.Draw(a_gl, this, a_camera, a_directionalLight);
 }
 
 Yoyo.Model.prototype.LoadModel = function(a_gl)
@@ -278,6 +280,6 @@ Yoyo.Model.prototype.CreateFromObj = function(a_gl)
             throw "Yoyo.Model.CreateFromObj: When setting buffers error: " + e.message;
         }
                            
-    }, false);
+    }, true);
 }
 

@@ -20,17 +20,19 @@ Yoyo.Scene = function(a_canvas)
     this.m_camera = null; 
 
     //The model that is drawn
-    this.m_currentModel = null;   
-    
-    //Any rotation on the model
-    this.m_rotationMatrix = mat4.create();   
+    this.m_currentModel = null;     
 
     //Inits the m_gl object
     this.InitWebGL();
     
     this.m_gl.enable(this.m_gl.DEPTH_TEST);
+
+    this.m_gl.enable(this.m_gl.CULL_FACE);
+    this.m_gl.cullFace(this.m_gl.BACK);
     
-    this.m_camera =  new Yoyo.Camera( vec3.create([0,2,-4]), Math.PI * 0.5 ,0, this.m_canvas.width, this.m_canvas.height );
+    this.m_camera =  new Yoyo.Camera( vec3.create([0,2,4]),Math.PI * -0.5 , 0 , this.m_canvas.width, this.m_canvas.height );
+
+    this.m_directionalLight = new Yoyo.DirectionalLight(vec3.create([1,-5,-5]) , vec3.create([0.7,0.7,0.7] ) );
     
     this.m_lastRender;   
     
@@ -56,7 +58,7 @@ Yoyo.Scene.prototype.InitWebGL = function()
     if (!this.m_gl) 
     {
         alert("Unable to initialize WebGL. Your browser may not support it");
-        throw "Yoyo.Scene.InitWebGL: Unable to initialize WebGL. Your browser may not support it.";
+        console.log( "Yoyo.Scene.InitWebGL: Unable to initialize WebGL. Your browser may not support it." );
     }    
 }
 
@@ -73,31 +75,7 @@ Yoyo.Scene.prototype.AddModel = function(a_modelListItem)
         this.Render(0);
     }
 }
-/*
-Yoyo.Scene.prototype.LoadModel = function(a_modelImporterTech)
-{
-    /// <summary>Loads a model from model file and sets m_currentModel as the model.</summary>
-    /// <param name="a_modelname" type="string">The name of the model, no file extension</param>
-    /// <param name="a_modelImporterTech" type="ModelImporterTechs">a model importer technique, like object which tries to create model from an object file.</param>   
-    
-    if (this.m_currentModel === null || this.m_currentModel.m_path !== a_path)
-    {
-        //Reset the rotation matrix so new model doesn't have some odd rotation!   
-        //mat4.identity(this.m_rotationMatrix);
-        //Creates a new model
-        this.m_currentModel = new Yoyo.Model(a_modelname);
 
-        switch (a_modelImporterTech)
-        {
-            case Yoyo.ModelImportersTechs.Object:          
-                this.m_currentModel.CreateFromObj(this.m_gl);
-                break;
-            default:
-                throw "Yoyo.Scene.LoadModel: Not an existing model importer technique.";
-        }    
-    }    
-}
-*/
 Yoyo.Scene.prototype.SetModelShader = function(a_shadertype, a_textures)
 {
     if (this.m_currentModel === null)
@@ -129,28 +107,33 @@ Yoyo.Scene.prototype.Render = function(a_timeElapsed)
     this.m_gl.clearColor(0.0, 0, 0.0, 1.0); 
     this.m_gl.clear(this.m_gl.COLOR_BUFFER_BIT | this.m_gl.DEPTH_BUFFER_BIT);     
     
-    if (this.m_currentModel !== null && this.m_currentModel.m_loaded)
+    if (this.m_currentModel !== null)
     {
-        //Doing the check here which possibly isn't optimal but it's easiest to recall Render here if not loaded!
-        if (!this.m_currentModel.m_shader.m_loaded)
+        if (this.m_currentModel.m_loaded)
         {
-            this.m_currentModel.m_shader.CheckIfReady();
-            Yoyo.requestAnimFrame(this);
+            //Doing the check here which possibly isn't optimal but it's easiest to recall Render here if not loaded!
+            if (!this.m_currentModel.m_shader.m_loaded)
+            {
+                this.m_currentModel.m_shader.CheckIfReady();
+                Yoyo.requestAnimFrame(this);
+            }
+            else
+            {
+                //try catch isn't really neccesary but it's hard to catch opengl errors otherwise
+                try
+                {
+                    this.m_currentModel.Draw(this.m_gl, this.m_camera, this.m_directionalLight);
+                }
+                catch (e)
+                {
+                    console.log("Yoyo.Scene.Render: Error when drawing model error: " + e.message);
+                }                
+            }
         }
         else
         {
-            //try catch isn't really neccesary but it's hard to catch opengl errors otherwise
-            try
-            {
-                this.m_currentModel.Draw(this.m_gl, this.m_camera);
-            }
-            catch (e)
-            {
-                throw "Yoyo.Scene.Render: Error when drawing model error: " + e.message;
-            }
-
-            //Yoyo.requestAnimFrame(this);
-        }       
+            Yoyo.requestAnimFrame(this);  
+        }      
         
     }
 

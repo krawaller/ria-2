@@ -13,6 +13,7 @@ Yoyo.Shader = function()
     this.m_fragmentShader;
 
     this.m_loaded = false;
+    //this.m_type;
 
     //Shader texture objects
     this.m_stos = [];

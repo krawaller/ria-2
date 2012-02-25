@@ -89,15 +89,19 @@ Yoyo.Camera.prototype.SetViewProjMatrix = function()
 
 Yoyo.Camera.prototype.SetCameraDirection = function()
 {
-    ///<summary>Sets the m_cameraDir vector based on x axis rotation and y rotation</summary>    
+    ///<summary>Sets the m_cameraDir vector based on x axis rotation and y rotation</summary>   
     
-    //this.m_cameraDir = vec3.create([Math.sin(this.m_Xaxis) * Math.cos(this.m_Yaxis) ,Math.sin(this.m_Xaxis) * Math.sin(this.m_Yaxis)  , Math.cos(this.m_Xaxis) ]);
+   
     this.m_cameraDir = vec3.create([Math.cos(this.m_yaw) * Math.cos(this.m_pitch) ,Math.sin(this.m_pitch)  , Math.sin(this.m_yaw) * Math.cos(this.m_pitch) ]);    
 
     vec3.add(this.m_cameraPosition, this.m_cameraDir, this.m_lookAtPoint);
 
     vec3.cross(this.m_cameraDir, this.m_vectorUp, this.m_cameraLeftDir);
+    vec3.normalize(this.m_cameraLeftDir);
+    
     vec3.cross(this.m_cameraLeftDir, this.m_cameraDir, this.m_vectorUp);
+    vec3.normalize(this.m_vectorUp);
+    
 
 }
 

@@ -22,3 +22,10 @@ thumbnail Models/Thumbnails/DoublecubeThumb.png
 shader Normal
 diffusemap Textures/testtexture.png
 normalmap Textures/TestNormalMap.png
+;
+name Modle-Room
+path Models/Testroom.obj
+thumbnail Models/Thumbnails/TestRoomThumb.png
+shader Normal
+diffusemap Textures/TestroomCLR.png
+normalmap Textures/rosenormal.png

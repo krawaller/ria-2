@@ -16,7 +16,7 @@ body
     left:0px;
     padding:5px 5px;
     
-    overflow:scroll;    
+    overflow:scroll;
     z-index:-1;  
     
 }
@@ -49,13 +49,31 @@ body
     
 }
 
-#modellist
+#maincontent
 {
-    width:640px;      
-    height: 144px;
+    width:60%;
+    margin-left:20%;
+    padding-left:5px;
+    padding-top:5px;   
+    
 }
-    #modellist a
+    #maincontent #glcanvas
     {
-        padding-left:4px;
-        padding-top:3px;
+        
     }
+
+    #maincontent #modellist
+    {
+        width:640px;      
+        height: 144px;
+    }
+        #maincontent #modellist a
+        {
+            padding-left:4px;
+            padding-top:3px;
+        }
+        
+        #maincontent #modellist .selected
+        {
+            border:2px Solid Green;
+        }
