@@ -23,7 +23,7 @@ Yoyo.Ajax.GetXHR = function()
         } 
         catch (error)
         {
-            throw new Error("No XHR object available");
+            console.log("No XHR object available");
         }
     }
     return xhr;
@@ -68,9 +68,7 @@ Yoyo.Ajax.ReadFile = function(a_url, a_callback,isAsynchronous)
 		}
 	}
     
-	xhr.open("get", a_url, m_isAsynchronous);
-
-	//xhr.setRequestHeader('If-Modified-Since', 'Mon, 01 Sep 2007 00:00:00 GMT');
+	xhr.open("get", a_url, m_isAsynchronous);	
 	
 	xhr.send(null);
 }

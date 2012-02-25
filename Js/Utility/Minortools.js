@@ -112,7 +112,8 @@ Yoyo.GetTextureNumber = function(a_gl, a_id)
 
     if (a_id < 0 || a_id > 24)
     {
-        throw("a_id is not within 0 -> 24");
+       console.log("a_id is not within 0 -> 24");
+       return null;
     }
 
     switch(a_id)

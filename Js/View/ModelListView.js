@@ -9,6 +9,7 @@ Yoyo.ModelListView = Backbone.View.extend(
     m_collection:null,
     m_modellistDiv:document.getElementById("modellist"),
     m_scene:null,
+    //Keeps track of the a tag that is currently "selected"
     m_currentlySelected:null,
     m_firstElement:false,
         

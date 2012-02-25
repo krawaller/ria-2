@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="iso-8859-1" />
+    <title>Yoyo Model Viewert Documentation</title>  
+    
+    <link href="documentationstyle.css" rel="stylesheet" type="text/css" />
+    <script src="documentationformatting.js" type="text/javascript"></script>
+</head>
+	  <!-- Empty Template
+
+        <h1></h1>
+
+            <h2></h2>
+                <h3>Comments</h3>
+                    <p></p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+     -->
+<body>
+    <!-- Table of contents, I am lazy so automatically created by JS!  The application is js tho so that should be ok! -->
+    <div id="toc"><h2>Table of contents</h2></div>        
+
+    <div id="content" >         
+       <h1>ViewerControls</h1>
+
+            <h2>Member variables</h2>
+                <h3>public</h3>
+                    <ul>
+                        <li>Scene : m_scene</li>
+                        <li>int : lots of keyboard keycodes</li>
+                        <li>bool : bool for each keyboard that's usable</li>
+                        <li>int : m_keysPressed</li>
+                        <li>int : m_keyPressTimerID</li>
+                        <li>element : m_wholepageDiv</li>
+                    </ul>
+            <h2>Initilize</h2>
+                <h3>Comments</h3>
+                    <p>Initilizes the class, sets the events on like keyboard press, sets the scene!</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                      <li>Scene : a_scene</li>  
+                    </ul>                
+                
+            <h2>ViewControlEvent</h2>
+                <h3>Comments</h3>
+                    <p>The event to handle many keypresses at once e.t.c. so it has a proper elapsedTime and re-renders the scene
+                    as camera or other stuff is moving, once no keys are pressed it stops calling itself</p>
+                
+            <h2>SetControlKeys</h2>
+                <h3>Comments</h3>
+                    <p>It sets the keycodes for the keys, it's incase different browsers have different keys</p>  
+                    
+        <h1>ModelListView</h1>
+            <h2>Member variables</h2>
+                <h3>public</h3>                                   
+                    <ul>
+                        <li>ModelListHandler : m_collection</li>
+                        <li>Scene : m_scene - just a reference!</li>
+                        <li>Element : m_currentlySelected - keeps track of what model is currently selected</li>
+                        <li>bool : m_firstElement - is set true when RenderItem is called first time. It's so it draws the first elemennt and canvas isn't black</li>
+                    </ul>
+
+            <h2>RenderItem</h2>
+                <h3>Comments</h3>
+                    <p>
+                        Is called from m_collection when it has managed to read 1 item from the models text file as tht file is asynchronous,
+                        so if there was 1 million models the list would slowly fill up rendering em 1 at a time!
+                    </p>
+
+        <h1>ModelListHandler</h1>
+            <h3>Comments</h3>
+                <p>This class just reads the textfile by string splits and calls ModelListView.RenderItem when it has read 1 item and added it's to its collection</p>
+
+        <h1>ModelListItem</h1>
+            <h2>Member variables</h2>   
+                <h3>public</h3>
+                    <ul>
+                        <li>String : m_name</li>
+                        <li>String : m_path</li>
+                        <li>String : m_thumbnailpath</li>
+                        <li>String : m_shaderType</li>
+                        <li>TextureObject[] m_textures</li>
+                    </ul> 
+                    
+            <h2>Initilize</h2>
+                <h3>Comments</h3>
+                    <p>Sets all the public variables</p>
+                    
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>String : a_name</li>
+                        <li>String : a_path</li>
+                        <li>String : a_thumbnailpath</li>
+                        <li>String : a_shaderType</li>
+                        <li>TextureObject[] a_textures</li>
+                    </ul>        
+                    
+                
+                
+    </div>
+  
+</body>
+</html>

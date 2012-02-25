@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="iso-8859-1" />
+    <title>Yoyo Model Viewert Documentation</title>  
+    
+    <link href="documentationstyle.css" rel="stylesheet" type="text/css" />
+    <script src="documentationformatting.js" type="text/javascript"></script>
+</head>
+	 <!-- Empty Template
+
+        <h1></h1>
+
+            <h2></h2>
+                <h3>Comments</h3>
+                    <p></p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+     --> 
+<body>
+    <!-- Table of contents, I am lazy so automatically created by JS!  The application is js tho so that should be ok! -->
+    <div id="toc">
+        <h2>Table of contents</h2>
+    </div>
+        
+    <div id="content" >         
+        <h1>Ajax</h1>
+            <h2>GetXHR</h2>
+                <h3>Comments</h3>
+                    <p>Creates a XMLHttpRequest object, usually called by ReadFile() </p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>XMLHttpRequest object</p>
+            <h2>ReadFile</h2>
+                <h3>Comments</h3>
+                    <p>Reads from a file synchronously or asynchronosuly (default) and invokes a callback
+                    when its read the file </p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>String : a_url</li>
+                        <li>Function : a_callback</li>
+                        <li>bool : isAsynchronous</li>
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+        
+        <h1>Underscore</h1>
+        <h1>Backbone</h1>
+        <h1>glMatrix</h1>
+        <h1>jquery</h1>
+
+        <h1>MinorTools</h1>
+            <h3>Comments</h3>
+            <p>This class has many functions that do certain useful stuff throughout the application</p>
+
+            <h2>GetModelImporterTech</h2>
+                <h3>Comments</h3>
+                    <p>Based on file extension it returns an enumerator on what model importer technique to use</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>String : a_fileExtension</li>
+                    </ul>                
+                <h3>Returns</h3>
+                    <p>ModelImporterTech or null</p>
+
+            <h2>GetShader</h2>
+                <h3>Comments</h3>
+                    <p>Reads a shader script tag and creates a fragment or vertex shader depending on the type in the script tag</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>String : a_tagid</li>
+                    </ul>                
+                <h3>Returns</h3>
+                    <p>Fragment/Vertex shader or null</p>
+
+            <h2>GetTextureNumber</h2>
+                <h3>Comments</h3>
+                    <p>Takes an ID and returns a gl texture slot depending on ID</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>WebGL : a_gl</li>
+                        <li>int a_id</li>
+                    </ul>                
+                <h3>Returns</h3>
+                    <p>Texture slot</p>
+
+            <h2>requestAnimFrame</h2>
+                <h3>Comments</h3>
+                    <p>Makes sure that the requestAnimationFrame function is set properly, based on browser as requestAnimationFrame is a lot more friendly
+                    than setTimeout is! The function in itself takes a scene because it calls scenes Render function, it then through closure gets elapsedTime and sends that to Render function</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>Scene : a_scene</li>
+                        <li>float : a_elapsedTime</li>
+                    </ul>                
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+             <h2>add/removeEvent</h2>
+                <h3>Comments</h3>
+                    <p>Some function written by mr. crockford that does addEventListener always with bubbling and not based on browser for you!</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>element : obj</li>
+                        <li>String : type - like "click" instead of onclick</li>
+                        <li>Function : fn</li>
+                    </ul>                
+                <h3>Returns</h3>
+                    <p>Void</p> 
+            <h2>stop_event</h2>
+                <h3>Comments</h3>
+                    <p>Stops an event from bubbling to parent element</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>Event : e</li>                       
+                    </ul>                
+                <h3>Returns</h3>
+                    <p>False</p>    
+    </div> 
+</body>
+</html>
