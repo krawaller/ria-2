@@ -31,9 +31,9 @@ Yoyo.Shader.prototype.LoadFragmentShader = function(a_gl){}
 
 Yoyo.Shader.prototype.AddTexture = function(a_gl, a_path, a_samplerName) {};
 
-Yoyo.Shader.prototype.Draw = function(a_gl, a_model, a_camera) {};
+Yoyo.Shader.prototype.Draw = function(a_gl, a_model, a_camera, a_directionalLight) {};
 
-Yoyo.Shader.prototype.SetMatrixUniforms = function(a_gl, a_camera, a_model) {};
+Yoyo.Shader.prototype.SetMatrixUniforms = function(a_gl, a_camera, a_model, a_directionalLight) {};
 
 
 //ShaderTexture Object

@@ -1,0 +1,510 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="iso-8859-1" />
+    <title>Model classes</title>  
+    
+    <link href="documentationstyle.css" rel="stylesheet" type="text/css" />
+    <script src="documentationformatting.js" type="text/javascript"></script>
+</head>
+	 
+     <!-- Empty Template
+
+        <h1></h1>
+
+            <h2></h2>
+                <h3>Comments</h3>
+                    <p></p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+     -->
+
+<body>
+    <!-- Table of contents, I am lazy so automatically created by JS!  The application is js tho so that should be ok! -->
+    <div id="toc"></div>
+
+    <div id="content" >
+        <h1>Scene</h1>
+            <h2>Member Variables</h2>                          
+                <h3>public</h3>
+                <ul>
+                    <li>Canvas: m_canvas</li>
+                    <li>WebGL: m_gl</li>
+                    <li>Camera: m_camera</li>
+                    <li>Model: m_currentModel</li>                    
+                </ul>            
+            <h2>Construct</h2>
+                <h3>Comments</h3>
+                    <p>Initilizes most scenes variables, not model</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>Canvas : a_canvas</li>
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+            <h2>InitWebGL</h2>
+                <h3>Comments</h3>
+                    <p>Invoked by construct</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>AddModel</h2>
+                <h3>Comments</h3>
+                    <p>Sets m_currentModel to a model, loads it and sets the shader, then re-renders canvas</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>ModelListItem : a_modelListItem</li>
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>SetModelShader</h2>
+                <h3>Comments</h3>
+                    <p>Sets m_currentModels shader</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>Shadertype: a_shadertype</li>
+                        <li>TextureObject[] : a_textures</li>
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+            <h2>Render</h2>
+                <h3>Comments</h3>
+                    <p>Renders the screen when called, recalls itself if model isn't loaded</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>float : a_elapsedTime</li>
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+        <!-- end of Scene -->
+
+        <!-- start of Shader -->
+        <h1>Shader</h1>
+            <h2>Member Variables</h2>                          
+                <h3>public</h3>
+                <ul>
+                    <li>VertexShader : m_vertexShader</li>
+                    <li>FragmentShader : m_fragmentShader</li>
+                    <li>Bool : m_loaded</li>
+                    <li>ShaderTextureObject[] : m_stos</li>
+                    <li>ShaderProgram : m_shaderProgram</li>                 
+                </ul>     
+            
+            <h2>Construct</h2>
+                <h3>Comments</h3>
+                    <p>A class that is inherited by other shaders</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>InitShader</h2>
+                <h3>Comments</h3>
+                    <p>Shader sets its glsl varables here and other important stuff, calls functions: LoadVertexShader, LoadFragmentShader,
+                    AddTexture </p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>WebGL : a_gl</li>
+                        <li>TextureObject: a_textures</li>
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+            <h2>CheckIfReady</h2>
+                <h3>Comments</h3>
+                    <p>Loops through shader texture objects array and checks if all of them are ready, 
+                    if they are m_loaded is set to true</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>LoadVertex/FragmentShader</h2>
+                <h3>Comments</h3>
+                    <p>Loads the vertex or fragment shader from a x-type/vertex or FragmentShader script tag</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>AddTexture</h2>
+                <h3>Comments</h3>
+                    <p>Creates a ShaderTextureObject based on data from a TextureObject, also loads a sampler from the vertex/fragment shader</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>WebGL : a_gl</li>
+                        <li>String : a_path</li>
+                        <li>String : a_samplerName</li>
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>Draw</h2>
+                <h3>Comments</h3>
+                    <p>Draws a model with the models vertex, texture and normal buffer, STO:s, and uniforms</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>WebGL : a_gl</li>
+                        <li>Model : a_model</li>
+                        <li>Camera : a_camera</li>
+                        <li>DirectionalLight : a_directionLight</li>
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+            <h2>SetMatrixUniforms</h2>
+                <h3>Comments</h3>
+                    <p>Sets the input parameters (uniforms) to the glsl shader</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>WebGL : a_gl</li>
+                        <li>Model : a_model</li>
+                        <li>Camera : a_camera</li>
+                        <li>DirectionalLight : a_directionLight</li>
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+        <!-- End of Shader -->
+
+        <!-- Start of NormalShader -->
+        <h1>NormalShader</h1>
+            <h3>Comments</h3>
+                <p>Inherits from Shader, so see <a href="#Shader" >Shader</a> information!</p>
+        <!-- End of NormalShader -->
+
+        <!-- Start of ShaderTextureObject -->
+        <h1>ShaderTextureObject</h1>
+            <h2>Member Variables</h2>                          
+                <h3>public</h3>
+                <ul>
+                    <li>Bool : m_loaded</li>
+                    <li>GLTexture : m_texture</li>
+                    <li>GLSampler : m_sampler</li>                              
+                </ul>
+                <h3>private</h3>
+                <ul>                    
+                    <li>This : f_that</li>
+                    <li>Img : m_image</li>                 
+                </ul>
+
+            <h2>Construct</h2>
+                <h3>Comments</h3>
+                    <p>Sets all variables and sets m_image.onload = LoadTexture() to load texture when it's finished loading</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>String : a_path</li>
+                        <li>GLSampler : a_sampler</li>
+                        <li>WebGL : a_gl</li>                        
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>LoadTexture</h2>
+                <h3>Comments</h3>
+                    <p>Sets m_loaded to true and loads m_texture with the pixel info from img tag</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>Img : a_image</li>                        
+                        <li>WebGL : a_gl</li>                        
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+        <h1>Model</h1>
+            <h2>Member Variables</h2>                          
+                <h3>public</h3>
+                <ul>
+                    <li>String : m_name</li>
+                    <li>String : m_path</li>
+                    <li>Shader : m_Shader</li>
+                    <li>Bool : m_loaded</li>   
+                    <li>Float32Array : m_vertexBuffer</li>
+                    <li>Float32Array : m_textureCoordinates</li>
+                    <li>Float32Array : m_normalBuffer</li>
+                    <li>Vec3 : m_position</li>
+                    <li>Mat4 : m_translateMatrix</li>
+                    <li>Mat4 : m_scale</li>
+                    <li>Mat4 : m_rotation</li>  
+                    <li>Mat4 : m_worldMatrix</li>                      
+                </ul>
+            
+            <h2>SetScale</h2>                          
+                <h3>Comments</h3>
+                    <p>Sets the scale based on a vec3, calls UpdateWorldMatrix to update world matrix too</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>Vec3 : a_vec</li>                                             
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>SetRotation</h2>                          
+                <h3>Comments</h3>
+                    <p>Sets the rotation based on a_radian and vec3 a_axis, it takes the value in xyz and multiplies it with a_radian. 
+                    So 1,0,0 is 1.0 a_radian value in x and 0 in others. 0.5,0,0 is 0.5 a_radian in x-axis e.t.c. 
+                    Calls UpdateWorldMatrix() in the end</p>
+                <h3>Parameters:</h3>                    
+                    <ul>
+                        <li>float : a_radian</li>
+                        <li>Vec3 : a_axises</li>                                             
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p> 
+
+            <h2>UpdateWorldMatrix</h2>                          
+                <h3>Comments</h3>
+                    <p>Sets m_WorldMatrix to identity matrix, then multiplies it with the scale, then multiplies it with rotation, Voilá!</p>
+                <h3>Parameters:</h3>                    
+                    <ul>                                                                 
+                    </ul>
+                
+                <h3>Returns</h3>
+                    <p>Void</p>
+                    
+            <h2>SetShader</h2> 
+                <h3>Comments</h3>
+                    <p>Sets the shader reference</p>
+                <h3>Parameters</h3>
+                    <ul>
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+                    
+            <h2>Draw</h2> 
+                <h3>Comments</h3>
+                    <p>Calls m_shader.Draw() function and sends itself as a model to the draw function as it needs a model</p>
+                <h3>Parameters</h3>
+                    <ul>
+                        <li>WebGL : a_gl</li>
+                        <li>Camera : a_camera</li>
+                        <li>DirectionalLight : a_directionalLight</li>
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+            <h2>LoadModel</h2>
+                <h3>Comments</h3>
+                    <p>Selects the proper model loading technique based on file extension on m_path
+                    Picks CreateFromObj on .txt or .obj</p>
+                <h3>Parameters</h3>
+                    <ul>
+                        <li>WebGL : a_gl</li>                        
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>CreateFromObj</h2>
+                <h3>Comments</h3>
+                    <p>One of the model loading techniques from a wavefront obj file. Uses m_path to start an ajax
+                    call and read the data from the path. Then initiate the buffers based on the data in the format of : <a href="http://en.wikipedia.org/wiki/Wavefront_OBJ">wiki link</a></p>
+                <h3>Parameters</h3>
+                    <ul>
+                        <li>WebGL : a_gl</li>                        
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+        <!-- End of Model -->
+
+        <!-- Start of Camera -->
+        <h1>Camera</h1>
+            <h2>Member Variables</h2>                          
+                <h3>public</h3>
+                <ul>
+                    <li>Mat4 : m_projectionMatrix</li>
+                    <li>Mat4 : m_viewMatrix</li>
+                    <li>Mat4 : m_provViewMatrix</li>
+                    <li>Vec3 : m_vectorUp</li>
+                    <li>Vec3 : m_cameraPosition</li>
+                    <li>Vec3 : m_lookAtPoint</li>
+                    <li>Vec3 : m_cameraDir</li>
+                    <li>Vec3 : m_cameraLeftDir - strafe direction</li>
+                    <li>int : m_fov</li>
+                    <li>int : m_width</li>
+                    <li>int : m_height</li>
+                    <li>float : m_aspectRatio</li>
+                    <li>float : m_yaw</li>
+                    <li>float : m_pitch</li>
+                    <li>float : m_roll</li>
+                    <li>float : m_rotationSpeed</li>
+                    <li>float : m_moveSpeed</li>
+                    <li>Vec3 : m_tempVec3</li>                 
+                </ul>
+            
+            <h2>SetViewMatrix</h2>
+                <h3>Comments</h3>
+                    <p>Creates a mat4.lookAt( m_cameraPosition, m_lookAtPoint, m_vectorUp ) matrix for m_viewMatrix.
+                    Then calls SetViewProjMatrix() to update that</p>
+                    <ul>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>SetProjectionMatrix</h2>
+                <h3>Comments</h3>
+                    <p>This function sets m_fov (field of view) , m_width, m_height and m_aspectratio. Then sets m_projectionMatrix</p>
+                    <ul>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>SetViewProjMatrix</h2>
+                <h3>Comments</h3>
+                    <p>Sets the m_projViewMatrix if m_viewMatrix and m_projectionMatrixes are set. 
+                    This matrix is currently not in use but it's an optimization matrix to do less matrix multiplications</p>
+                    <ul>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>SetCameraDirection</h2>
+                <h3>Comments</h3>
+                    <p>Sets m_cameraDir by using yaw, pitch with sinus and cos to give it correct value. Then it does m_lookAtPoint = (m_cameraPosition + m_cameraDir).
+                     Then it does cross product on cameraDir and m_vectorUp.  Then it does cross product again but on m_cameraLeftDir and m_cameraDir to get m_vectorUp.</p>
+                    <ul>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>RotateVertical</h2>
+                <h3>Comments</h3>
+                    <p>Rotates vertically by a_radian degrees by adding m_pitch with the degrees</p>
+                    <ul>
+                        <li>float : a_radian</li>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>RotateHorizontal</h2>
+                <h3>Comments</h3>
+                    <p>Rotates horizontally by a_radian degrees by adding m_yaw with the degrees</p>
+                    <ul>
+                        <li>float : a_radian</li>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>ConvertMouseMovementToRadian</h2>
+                <h3>Comments</h3>
+                    <p>Converts Mousemovement x or y pixels delta value to radian for RotateHorizontal or vertical</p>
+                    <ul>
+                        <li>int : a_value</li>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>MoveLeft</h2>
+                <h3>Comments</h3>
+                    <p>Strafes the camera to the left of local camera rotation</p>
+                    <ul>
+                        <li>float : a_elapsedTime</li>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>MoveRight</h2>
+                <h3>Comments</h3>
+                    <p>Strafes the camera to the right of local camera rotation</p>
+                    <ul>
+                        <li>float : a_elapsedTime</li>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>MoveForward</h2>
+                <h3>Comments</h3>
+                    <p>Moves camera forward</p>
+                    <ul>
+                        <li>float : a_elapsedTime</li>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>MoveBackward</h2>
+                <h3>Comments</h3>
+                    <p>Moves camera backward</p>
+                    <ul>
+                        <li>float : a_elapsedTime</li>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>TurnUpwards</h2>
+                <h3>Comments</h3>
+                    <p>Rotates camera vertically upwards</p>
+                    <ul>
+                        <li>float : a_elapsedTime</li>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>TurnUpwards</h2>
+                <h3>Comments</h3>
+                    <p>Rotates camera vertically downwards</p>
+                    <ul>
+                        <li>float : a_elapsedTime</li>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>TurnLeft</h2>
+                <h3>Comments</h3>
+                    <p>Rotates camera horizontally to the left</p>
+                    <ul>
+                        <li>float : a_elapsedTime</li>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+            <h2>TurnRight</h2>
+                <h3>Comments</h3>
+                    <p>Rotates camera horizontally to the right</p>
+                    <ul>
+                        <li>float : a_elapsedTime</li>                                            
+                    </ul>
+                <h3>Returns</h3>
+                    <p>Void</p>
+
+        <h1>DirectionalLight</h1>
+            <h2>Member Variables</h2>                          
+                <h3>public</h3>
+                <ul>
+                    <li>Vec3 : m_lightDirection</li>
+                    <li>Vec3 : m_lightColor</li>                                   
+                </ul>
+
+
+            
+            
+    </div>
+  
+</body>
+</html>

@@ -1,0 +1,45 @@
+body
+{
+    background-color:#0F0F0F;
+    color:#784AFF;
+}
+
+#toc
+{   
+}
+
+#toc a
+{
+    position:relative;
+}
+
+h1
+{
+	color:#3BB5B0;
+}
+
+h2
+{
+    color:#c00;
+}
+
+h3
+{
+    color:#00cc00;
+}
+
+p
+{
+    margin:0 0;
+    padding-left:25px;
+}
+/*
+.highlighted
+{
+    color:#c00;
+}
+
+strong
+{
+    
+}*/

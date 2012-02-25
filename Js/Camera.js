@@ -105,16 +105,16 @@ Yoyo.Camera.prototype.SetCameraDirection = function()
 
 }
 
-Yoyo.Camera.prototype.RotateVertical = function(a_ymoved)
+Yoyo.Camera.prototype.RotateVertical = function(a_radian)
 {
-    var f_radians = this.ConvertMouseMovementToRadian(a_ymoved);
+    var f_radians = this.ConvertMouseMovementToRadian(a_radian);
 
     this.m_pitch += f_radians;    
 }
 
-Yoyo.Camera.prototype.RotateHorizontal = function(a_xmoved)
+Yoyo.Camera.prototype.RotateHorizontal = function(a_radian)
 {
-    var f_radians = this.ConvertMouseMovementToRadian(a_xmoved);
+    var f_radians = this.ConvertMouseMovementToRadian(a_radian);
 
     this.m_yaw += f_radians;    
 }

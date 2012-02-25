@@ -98,7 +98,7 @@ Yoyo.Scene.prototype.SetModelShader = function(a_shadertype, a_textures)
     this.m_currentModel.SetShader(f_shader);    
 }
 
-Yoyo.Scene.prototype.Render = function(a_timeElapsed)
+Yoyo.Scene.prototype.Render = function(a_elapsedTime)
 {
     /// <summary>Renders the scene</summary>    
 
